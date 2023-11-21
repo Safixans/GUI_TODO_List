@@ -39,5 +39,26 @@ public class TaskTableModel extends AbstractTableModel {
     public Class<?> getColumnClass(int columnIndex) {
         return getValueAt(0, columnIndex).getClass();
     }
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        // Making the status column (checkbox) editable
+        return columnIndex == 2;
+    }
+
+    @Override
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+        if (columnIndex == 2) {
+            Task task = tasks.get(rowIndex);
+            task.setStatus((Boolean) aValue);
+            fireTableCellUpdated(rowIndex, columnIndex);
+
+            // Update task in the database
+            // Consider doing this in a separate thread to avoid blocking the EDT
+            new TaskDAO().updateTask(task);
+        }
+    }
+
+
+
 }
 

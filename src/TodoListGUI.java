@@ -68,11 +68,38 @@ public class TodoListGUI extends JFrame {
         });
     }
 
+
+  /*  private void refreshTasksView() {
+        try {
+            List<Task> tasks = taskDAO.getAllTasks();
+            TaskTableModel model = new TaskTableModel(tasks);
+            table.setModel(model);
+
+            // Set the cell renderer for each column
+            CenterTableCellRenderer centerRenderer = new CenterTableCellRenderer();
+            for (int columnIndex = 0; columnIndex < table.getColumnCount(); columnIndex++) {
+                table.getColumnModel().getColumn(columnIndex).setCellRenderer(centerRenderer);
+            }
+
+            // Existing code for setting up checkbox renderer...
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e, "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }*/
+
+
+
     private void refreshTasksView() {
         try {
             List<Task> tasks = taskDAO.getAllTasks();
             TaskTableModel model = new TaskTableModel(tasks);
             table.setModel(model);
+
+            CenterTableCellRenderer centerRenderer = new CenterTableCellRenderer();
+            for (int columnIndex = 0; columnIndex < table.getColumnCount(); columnIndex++) {
+                table.getColumnModel().getColumn(columnIndex).setCellRenderer(centerRenderer);
+            }
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error: " + e, "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -119,6 +146,8 @@ public class TodoListGUI extends JFrame {
             }
         }
     }
+
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
