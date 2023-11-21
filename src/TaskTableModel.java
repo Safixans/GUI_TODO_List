@@ -24,7 +24,7 @@ public class TaskTableModel extends AbstractTableModel {
         Task task = tasks.get(rowIndex);
         switch (columnIndex) {
             case 0: return task.getId();
-            case 1: return task.getName();
+            case 1: return task.getTask_name();
             case 2: return task.isStatus();
             default: return null;
         }

@@ -1,18 +1,18 @@
 public class Task {
     private int id;
-    private String name;
+    private String task_name;
     private boolean status;
 
     // Constructor for creating a new task (without id, as it's auto-generated in the database)
-    public Task(String name, boolean status) {
-        this.name = name;
+    public Task(String task_name, boolean status) {
+        this.task_name = task_name;
         this.status = status;
     }
 
     // Constructor with id, useful for updating and deleting tasks
-    public Task(int id, String name, boolean status) {
+    public Task(int id, String task_name, boolean status) {
         this.id = id;
-        this.name = name;
+        this.task_name = task_name;
         this.status = status;
     }
 
@@ -30,12 +30,12 @@ public class Task {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getTask_name() {
+        return task_name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTask_name(String task_name) {
+        this.task_name = task_name;
     }
 
     public boolean isStatus() {

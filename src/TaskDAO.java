@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TaskDAO {
-    private Connection connection;
+    private  Connection connection;
 
     public TaskDAO() {
         try {
@@ -26,7 +26,7 @@ public class TaskDAO {
             while (rs.next()) {
                 Task task = new Task();
                 task.setId(rs.getInt("id"));
-                task.setName(rs.getString("task_name"));
+                task.setTask_name(rs.getString("task_name"));
                 task.setStatus(rs.getBoolean("status"));
                 tasks.add(task);
             }
@@ -40,7 +40,7 @@ public class TaskDAO {
         String sql = "INSERT INTO tasks (task_name, status) VALUES (?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, task.getName());
+            ps.setString(1, task.getTask_name());
             ps.setBoolean(2, task.isStatus());
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -52,7 +52,7 @@ public class TaskDAO {
         String sql = "UPDATE tasks SET task_name = ?, status = ? WHERE id = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, task.getName());
+            ps.setString(1, task.getTask_name());
             ps.setBoolean(2, task.isStatus());
             ps.setInt(3, task.getId());
             ps.executeUpdate();
