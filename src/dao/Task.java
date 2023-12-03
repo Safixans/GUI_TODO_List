@@ -1,19 +1,31 @@
+package dao;
+
+import java.util.Date;
+
 public class Task {
     private int id;
     private String task_name;
     private boolean status;
 
+
+
+
+
+
     // Constructor for creating a new task (without id, as it's auto-generated in the database)
     public Task(String task_name, boolean status) {
         this.task_name = task_name;
         this.status = status;
+
     }
+
 
     // Constructor with id, useful for updating and deleting tasks
     public Task(int id, String task_name, boolean status) {
         this.id = id;
         this.task_name = task_name;
         this.status = status;
+
     }
 
     // Default constructor
@@ -45,5 +57,7 @@ public class Task {
     public void setStatus(boolean status) {
         this.status = status;
     }
+
+
 }
 

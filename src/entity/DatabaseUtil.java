@@ -1,3 +1,5 @@
+package entity;
+
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -14,4 +16,3 @@ public class DatabaseUtil {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 }
-

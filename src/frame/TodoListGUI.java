@@ -1,17 +1,25 @@
+package frame;
+
+import controller.CRUController;
+import dao.Task;
+import dao.TaskDAO;
+import dao.TaskTableModel;
+import service.CenterTableCellRenderer;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-public class TodoListGUI extends JFrame {
+public class TodoListGUI extends JFrame implements CRUController {
     private TaskDAO taskDAO;
-    private JTable table;
-    private JTextField taskNameField;
-    private JCheckBox taskStatusField;
-    private JButton addButton;
-    private JButton updateButton;
-    private JButton deleteButton;
+    private final JTable table;
+    private final JTextField taskNameField;
+    private final JCheckBox taskStatusField;
+    private final JButton addButton;
+    private final JButton updateButton;
+    private final JButton deleteButton;
 
     public TodoListGUI() {
         try {
@@ -35,6 +43,24 @@ public class TodoListGUI extends JFrame {
         addButton = new JButton("Add Task");
         updateButton = new JButton("Update Task");
         deleteButton = new JButton("Delete Task");
+
+        addButton.setBackground(Color.GREEN);
+        updateButton.setBackground(Color.YELLOW);
+        deleteButton.setBackground(Color.RED);
+
+        addButton.setOpaque(true);
+        updateButton.setOpaque(true);
+        deleteButton.setOpaque(true);
+
+        // Set foreground (text) color for buttons
+        addButton.setForeground(Color.BLACK);
+        updateButton.setForeground(Color.BLACK);
+        deleteButton.setForeground(Color.magenta);
+
+       //  Set background color for buttons
+        addButton.setBackground(Color.GREEN);
+        updateButton.setBackground(Color.YELLOW);
+        deleteButton.setBackground(Color.RED);
 
         controlsPanel.add(taskNameField);
         controlsPanel.add(taskStatusField);
@@ -60,33 +86,8 @@ public class TodoListGUI extends JFrame {
                 updateTask();
             }
         });
-        deleteButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                deleteTask();
-            }
-        });
+        deleteButton.addActionListener(e -> deleteTask());
     }
-
-
-  /*  private void refreshTasksView() {
-        try {
-            List<Task> tasks = taskDAO.getAllTasks();
-            TaskTableModel model = new TaskTableModel(tasks);
-            table.setModel(model);
-
-            // Set the cell renderer for each column
-            CenterTableCellRenderer centerRenderer = new CenterTableCellRenderer();
-            for (int columnIndex = 0; columnIndex < table.getColumnCount(); columnIndex++) {
-                table.getColumnModel().getColumn(columnIndex).setCellRenderer(centerRenderer);
-            }
-
-            // Existing code for setting up checkbox renderer...
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error: " + e, "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }*/
-
 
 
     private void refreshTasksView() {
@@ -104,20 +105,22 @@ public class TodoListGUI extends JFrame {
             JOptionPane.showMessageDialog(this, "Error: " + e, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
-    private void addTask() {
+    @Override
+    public void addTask() {
         String name = taskNameField.getText();
         boolean status = taskStatusField.isSelected();
 
         try {
             taskDAO.addTask(new Task(name, status));
             refreshTasksView();
+
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error: " + e, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
-    private void updateTask() {
+    @Override
+    public  void updateTask() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow >= 0) {
             int id = Integer.parseInt(table.getValueAt(selectedRow, 0).toString());
@@ -132,8 +135,8 @@ public class TodoListGUI extends JFrame {
             }
         }
     }
-
-    private void deleteTask() {
+    @Override
+    public void deleteTask() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow >= 0) {
             int id = Integer.parseInt(table.getValueAt(selectedRow, 0).toString());
@@ -153,5 +156,6 @@ public class TodoListGUI extends JFrame {
         SwingUtilities.invokeLater(() -> {
             new TodoListGUI().setVisible(true);
         });
+
     }
 }

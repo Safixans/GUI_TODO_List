@@ -1,3 +1,7 @@
+package dao;
+
+import entity.DatabaseUtil;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,6 +11,7 @@ import java.util.List;
 
 public class TaskDAO {
     private  Connection connection;
+    private final ThreadLocal<Connection> connectionThreadLocal = new ThreadLocal<>();
 
     public TaskDAO() {
         try {
@@ -16,11 +21,31 @@ public class TaskDAO {
         }
     }
 
+
+    /**
+     * The connection field is shared among all methods in the class.
+     * Database connections are generally not thread-safe.
+     * If multiple threads attempt to use the same connection simultaneously,
+     * it can lead to issues. One approach is to use a separate connection for each thread or employ connection pooling.
+     * */
+    private Connection getConnection() throws SQLException {
+        Connection connection = connectionThreadLocal.get();
+
+        if (connection == null || connection.isClosed()) {
+            connection = DatabaseUtil.getConnection();
+            connectionThreadLocal.set(connection);
+        }
+
+        return connection;
+    }
+
+
     public List<Task> getAllTasks() {
         List<Task> tasks = new ArrayList<>();
         String sql = "SELECT * FROM tasks";
 
-        try (PreparedStatement ps = connection.prepareStatement(sql);
+        try (Connection connection = getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
@@ -28,6 +53,7 @@ public class TaskDAO {
                 task.setId(rs.getInt("id"));
                 task.setTask_name(rs.getString("task_name"));
                 task.setStatus(rs.getBoolean("status"));
+
                 tasks.add(task);
             }
         } catch (SQLException e) {
@@ -35,6 +61,8 @@ public class TaskDAO {
         }
         return tasks;
     }
+
+
 
     public void addTask(Task task) {
         String sql = "INSERT INTO tasks (task_name, status) VALUES (?, ?)";
@@ -48,6 +76,11 @@ public class TaskDAO {
         }
     }
 
+
+    /**
+     *
+     * @param task
+     */
     public void updateTask(Task task) {
         String sql = "UPDATE tasks SET task_name = ?, status = ? WHERE id = ?";
 
@@ -61,6 +94,11 @@ public class TaskDAO {
         }
     }
 
+
+    /**
+     *
+     * @param taskId
+     */
     public void deleteTask(int taskId) {
         String sql = "DELETE FROM tasks WHERE id = ?";
 
